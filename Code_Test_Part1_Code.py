@@ -3,7 +3,6 @@
 
 # #Importing Required Packages 
 
-# In[127]:
 
 import numpy as np
 import pandas as pd
@@ -25,13 +24,7 @@ from sklearn.metrics import mean_squared_error,r2_score
 from sklearn.grid_search import GridSearchCV
 
 
-# # Loading Data
-
-# In[10]:
-
 data_train = pd.read_table(r'E:\AV\c1_data_science_challenge\codetest_train.txt')
-
-# In[5]:
 
 data_train.head()
 
@@ -39,8 +32,6 @@ data_train.head()
 percent_of_missing_train  = data_train.apply(lambda x :  (float(sum(x.isnull()))/len(x))*100 )
 print "Train data has "+str(len(percent_of_missing_train[percent_of_missing_train > 5]))+" columsn with more than 5% missing"
 
-
-# In[9]:
 
 #Target in train has no missing values
 sum(data_train['target'].isnull())
@@ -73,15 +64,12 @@ for colname in train_panel.columns:
         print("Column %s has zero variance and is removed from data" % (colname))
 
 
-# In[20]:
-
 #Creating dummy variables
 train_panel = pd.get_dummies(train_panel, columns=categorical_col_train)
 
 #Multiplying the CV score with -1 to make it positive
 #Github comments for cross_val_score suggests this is know bug 
 
-# In[44]:
 
 #fitting Linear Model
 LR = LinearRegression(n_jobs=-1)
@@ -131,8 +119,6 @@ print str(train_features_subset.shape[1])+" columns selected"
 
 LR_Cross_val = cross_val_score(LR,train_features_subset,train_target,cv=10,scoring = 'mean_squared_error').mean()
 print "CV Score for Linear Regression : "+str(-1*LR_Cross_val)
-
-
 
 
 #Tunning Alpha for Lasso 
@@ -191,24 +177,17 @@ for i in clf.grid_scores_:
 pd.DataFrame(par).to_csv(r'E:\AV\c1_data_science_challenge\xgboost_tune_parameters.csv')
 
 
-# In[129]:
-
 param_tune = {'max_depth':7, 'learning_rate':0.05 ,'colsample_bytree':0.8,'min_child_weight' : 5 ,'subsample' : 0.8}
 param_tune['objective'] = 'reg:linear'
 
-
 X_train,X_test,y_train,y_test = train_test_split(train_features_subset,train_target,test_size = 0.4)
-
 num_rounds = 500
+
 model = xgboost.train(param_tune, xgboost.DMatrix(X_train,y_train), num_rounds)
-
 xgb_pred = model.predict(xgboost.DMatrix(X_test),ntree_limit=model.best_iteration)
-
 print mean_squared_error(xgb_pred,y_test)
 
 #MSE = 4.9
-
-# In[103]:
 
 #Performing same operation for Test Dataset
 data_test = pd.read_table(r'E:\AV\c1_data_science_challenge\codetest_test.txt')
@@ -252,8 +231,6 @@ test_features_subset = test_panel[features_selected]
 
 
 # ##Prediction of Model
-
-# In[123]:
 
 #training XGBoost with tuned paramters
 param_tune = {'max_depth':7, 'learning_rate':0.05 ,'colsample_bytree':0.8,'min_child_weight' : 5 ,'subsample' : 0.8}
