@@ -12,7 +12,7 @@ Importing the Text files
 library(foreign)
 library(dplyr)
 
-setwd('C:/Users/VISWANATH/Desktop/Aditya/Study/CapitalOne')
+setwd('/fakepath')
 
 files <-list.files(pattern = ".*.TXT")
 data <- data.frame()
